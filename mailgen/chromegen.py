@@ -1,5 +1,5 @@
 #! python3
-#Michi4
+# Michi4
 from PIL import Image
 import pyautogui
 import sys
@@ -19,7 +19,8 @@ kernel32.GlobalUnlock.argtypes = [ctypes.c_void_p]
 user32 = ctypes.windll.user32
 user32.GetClipboardData.restype = ctypes.c_void_p
 
-def getClip6digit():
+
+def get_clip_6_digit():
     user32.OpenClipboard(0)
     try:
         if user32.IsClipboardFormatAvailable(CF_TEXT):
@@ -32,32 +33,53 @@ def getClip6digit():
     finally:
         user32.CloseClipboard()
 
-def getMail():
+
+def get_mail():
     user32.OpenClipboard(0)
     try:
         if user32.IsClipboardFormatAvailable(CF_TEXT):
             data = user32.GetClipboardData(CF_TEXT)
             data_locked = kernel32.GlobalLock(data)
             text = ctypes.c_char_p(data_locked)
-            value = text.value
+            value = str(text.value)
             kernel32.GlobalUnlock(data_locked)
-            if "@dropmail.me" in str(value) or "@emltmp.com" in str(value) or "@spymail.one" in str(value) or "@10mail.org" in str(value):
-                match = re.search(r'[\w.+-]+@[\w-]+\.[\w.-]+', str(value))
-                return str(match.group(0))
+            domains = [
+                '@dropmail.me',
+                '@10mail.org',
+                '@yomail.info',
+                '@emltmp.com',
+                '@emlpro.com',
+                '@emlhub.com',
+                '@zeroe.ml',
+                '@laste.ml',
+                '@freeml.net',
+                '@10mail.tk',
+                '@minimail.gq',
+                '@flymail.tk',
+                '@spymail.one',
+                '@10mail.xyz',
+            ]
+            for domain in domains:
+                if domain in value:
+                    value = value.replace(":\r\n",
+                                          "")  # Replace semicolon and newline caused by copying address from semicolon
+                    print("Value: " + value)
+                    match = re.search(r'[\w.+-]+@[\w-]+\.[\w.-]+', value)
+                    return str(match.group(0))
             return False
     finally:
         user32.CloseClipboard()
-webbrowser.open('https://account.proton.me/signup?plan=free')
+
+
+webbrowser.open('https://account.proton.me/signup?plan=free', new=2)
 time.sleep(5)
 
 
-
 def randomize(
-                _option_,
-                _length_
-            ):
-
-    if _length_ > 0 :
+        _option_,
+        _length_
+):
+    if _length_ > 0:
 
         # Options:6Ww$oRvfSVk95tyM  6Ww$oRvfSVk95tyM    
         #       -p      for letters, numbers and symbols
@@ -69,97 +91,115 @@ def randomize(
         #       -y      for year selection
 
         if _option_ == '-p':
-            string._characters_='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+'
+            string._characters_ = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+'
         elif _option_ == '-s':
-            string._characters_='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
+            string._characters_ = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
         elif _option_ == '-l':
-            string._characters_='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+            string._characters_ = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
         elif _option_ == '-n':
-            string._characters_='1234567890'
+            string._characters_ = '1234567890'
         elif _option_ == '-m':
-            string._characters_='JFMASOND'
+            string._characters_ = 'JFMASOND'
 
         if _option_ == '-d':
-            _generated_info_=random.randint(1,28)
+            _generated_info_ = random.randint(1, 28)
         elif _option_ == '-y':
-            _generated_info_=random.randint(1950,2000)
+            _generated_info_ = random.randint(1950, 2000)
         else:
-            _generated_info_=''
-            for _counter_ in range(0,_length_) :
-                _generated_info_= _generated_info_ + random.choice(string._characters_)
+            _generated_info_ = ''
+            for _counter_ in range(0, _length_):
+                _generated_info_ = _generated_info_ + random.choice(string._characters_)
 
         return _generated_info_
 
     else:
         return 'error'
 
+
 # Username
-_username_=randomize('-s',5)+randomize('-s',5)+randomize('-s',5)
-pyautogui.typewrite(_username_ + '\t\t')
+_username_ = randomize('-s', 5) + randomize('-s', 5) + randomize('-s', 5)
+pyautogui.typewrite(_username_ + '\t\t\t')
 print("Username:" + _username_)
 
 # Password
-_password_=randomize('-p',16)
-pyautogui.typewrite(_password_+'\t'+_password_+'\t')
+_password_ = randomize('-p', 16)
+pyautogui.typewrite(_password_ + '\t' + _password_ + '\t')
 print("Password:" + _password_)
 
 pyautogui.typewrite('\n')
 time.sleep(5)
 pyautogui.typewrite('\t\t\t\n')
 
-pyautogui.keyDown('ctrlleft');  pyautogui.typewrite('t'); pyautogui.keyUp('ctrlleft')
+pyautogui.keyDown('ctrlleft')
+pyautogui.typewrite('t')
+pyautogui.keyUp('ctrlleft')
 
-time.sleep(10)
 pyautogui.typewrite('https://dropmail.me/\n')
 
+time.sleep(5)
 
-pyautogui.keyDown('shift');pyautogui.keyDown('down'); pyautogui.keyUp('down'); pyautogui.keyUp('shift')
-time.sleep(10)
+user32.OpenClipboard(0)
+user32.EmptyClipboard()
+user32.CloseClipboard()
 
 newMail = True
 while True:
     if not newMail:
-        pyautogui.keyDown('ctrlleft'); pyautogui.typewrite('r'); pyautogui.keyUp('ctrlleft')
+        pyautogui.keyDown('ctrlleft')
+        pyautogui.typewrite('r')
+        pyautogui.keyUp('ctrlleft')
         time.sleep(5)
-    pyautogui.typewrite('\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t')
-    pyautogui.keyDown('ctrlleft')
-    pyautogui.keyDown('shiftleft')
-    pyautogui.keyDown('shiftright')
-    pyautogui.press('down')
-    pyautogui.keyUp('shiftleft')
-    pyautogui.keyUp('shiftright')
-    pyautogui.keyUp('ctrlleft')
-    pyautogui.keyDown('ctrlleft'); pyautogui.typewrite('c'); pyautogui.keyUp('ctrlleft')
-    newMail = getMail()
+
+    # Find semicolon before email address and select text from there
+    pyautogui.hotkey('ctrl', 'f')
+    time.sleep(1)
+    pyautogui.typewrite(':')
+    pyautogui.typewrite('\n\t\t\t\n')  # Close the find window
+    time.sleep(1)
+    pyautogui.hotkey('shift', 'down')
+    pyautogui.hotkey('shift', 'down')
+    time.sleep(1)
+    pyautogui.hotkey('ctrl', 'c')
+    time.sleep(1)
+    newMail = get_mail()
+
     if newMail:
         print("10 min mail: " + newMail)
         break
 
-pyautogui.keyDown('ctrlleft');  pyautogui.typewrite('\t'); pyautogui.keyUp('ctrlleft')
+pyautogui.keyDown('ctrlleft')
+pyautogui.typewrite('\t')
+pyautogui.keyUp('ctrlleft')
 time.sleep(1)
-#äpyautogui.typewrite(newMail)
-pyautogui.keyDown('ctrlleft');  pyautogui.typewrite('v'); pyautogui.keyUp('ctrlleft')
+# äpyautogui.typewrite(newMail)
+pyautogui.hotkey('ctrl', 'v')
 pyautogui.press('backspace')
 pyautogui.typewrite('\n')
 
 time.sleep(10)
 
-pyautogui.keyDown('ctrlleft');  pyautogui.typewrite('\t'); pyautogui.keyUp('ctrlleft')
+pyautogui.keyDown('ctrlleft')
+pyautogui.typewrite('\t')
+pyautogui.keyUp('ctrlleft')
 time.sleep(1)
 
-#pyautogui.typewrite('\t\t\t\t\t\t\t\t\t\t\t\t\t\n')
+# pyautogui.typewrite('\t\t\t\t\t\t\t\t\t\t\t\t\t\n')
 
-#time.sleep(5)
-
-
-pyautogui.keyDown('ctrlleft');  pyautogui.typewrite('a'); pyautogui.keyUp('ctrlleft')
-pyautogui.keyDown('ctrlleft'); pyautogui.typewrite('c'); pyautogui.keyUp('ctrlleft')
+# time.sleep(5)
 
 
-pyautogui.keyDown('ctrlleft');  pyautogui.typewrite('\t'); pyautogui.keyUp('ctrlleft')
+pyautogui.keyDown('ctrlleft')
+pyautogui.typewrite('a')
+pyautogui.keyUp('ctrlleft')
+pyautogui.keyDown('ctrlleft')
+pyautogui.typewrite('c')
+pyautogui.keyUp('ctrlleft')
+
+pyautogui.keyDown('ctrlleft')
+pyautogui.typewrite('\t')
+pyautogui.keyUp('ctrlleft')
 time.sleep(5)
-pyautogui.typewrite(str(getClip6digit()) + '\n')
-
+pyautogui.typewrite(str(get_clip_6_digit()) + '\n')
 
 time.sleep(5)
 pyautogui.typewrite('\n')
@@ -168,21 +208,19 @@ pyautogui.typewrite('\t\t\t\t\n')
 time.sleep(1)
 pyautogui.typewrite('\t\n')
 
-print(_username_+"@proton.me:" + _password_)
+print(_username_ + "@proton.me:" + _password_)
 
 logfile = open("accLog.txt", "a")
 logfile.write(_username_ + "@proton.me:" + _password_ + "\n")
 logfile.close()
 
-
-
 # CHAPTCHA
-#pyautogui.typewrite('\t')
-#pyautogui.typewrite('\t')
-#pyautogui.typewrite('\t')
-#pyautogui.typewrite('\t')
-#pyautogui.typewrite('\t')
-#pyautogui.typewrite('\t')
-#pyautogui.typewrite('\t')
+# pyautogui.typewrite('\t')
+# pyautogui.typewrite('\t')
+# pyautogui.typewrite('\t')
+# pyautogui.typewrite('\t')
+# pyautogui.typewrite('\t')
+# pyautogui.typewrite('\t')
+# pyautogui.typewrite('\t')
 
-#pyautogui.typewrite('\n')
+# pyautogui.typewrite('\n')
